@@ -7,6 +7,7 @@ import InterestAnalysisResult from './pages/interest_analysis/InterestAnalysisRe
 import BiasAnalysis from './pages/bias_analysis/BiasAnalysis';
 import Recommendation from './pages/recommendation/Recommendation';
 import Review from './pages/review/Review';
+import Test from './pages/test/Test';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/bias-analysis" element={< BiasAnalysis/>} />
         <Route path="/recommendation" element={<Recommendation />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/test" element={<Test />} />
 
       </Routes>
     </>

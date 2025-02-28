@@ -16,7 +16,7 @@ const HomepageTop = () => {
         top: "110px",
         left: "50%",
         transform: "translateX(-50%)",
-        height: "350px", // 전체 박스 높이 증가
+        height: "350px",
         width: "100%",
         zIndex: 1000,
         display: "flex",
@@ -28,31 +28,41 @@ const HomepageTop = () => {
         <Typography variant="h2" fontWeight="bold" gutterBottom>
           알고 <span style={{ color: "#000" }}>VIEW</span>
         </Typography>
-        <Typography variant="h6" color="gray" gutterBottom >
+        <Typography variant="h6" color="gray" gutterBottom>
           YOUTUBE 기록을 분석하여 자신의 취향과 성향을 알아보세요!
         </Typography>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          sx={{ mt: 4, px: 13 }} // 버튼도 아래로 이동
-          onClick={() => navigate("/interest-analysis")} // 버튼 클릭 시 페이지 이동
+          sx={{ mt: 4, px: 13 }}
+          onClick={() => navigate("/interest-analysis")}
         >
           분석하기
         </Button>
       </Container>
 
-      {/* 돋보기 이미지 */}
+      {/* 오른쪽 하단 고정 (조금 더 아래로 내림) */}
       <Box
         component="img"
         src={magnifierYoutube}
         alt="Magnifier YouTube"
         sx={{
           position: "absolute",
-          left: "70%",
-          top: "30%", // 이미지 위치 조정
-          width: "550px",
+          right: 0,
+          bottom: "-20px",
+          width: "550px", // 크기 유지
           zIndex: -1,
+
+          // 반응형 조정 (작은 화면에서는 간격 유지)
+          "@media (max-width: 900px)": {
+            right: "3%",
+            bottom: "-10px",
+          },
+          "@media (max-width: 600px)": {
+            right: "5%",
+            bottom: "-5px",
+          },
         }}
       />
     </Box>

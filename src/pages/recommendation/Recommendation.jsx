@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Typography, Card, CardContent, Button } from "@mui/material";
+import { useState, useRef } from "react";
+import { Box, Card, CardContent, Typography, Button } from "@mui/material";
 
 const articles = [
   {
@@ -42,13 +42,65 @@ const articles = [
     fullContent:
       "감성적인 디저트와 아트라이브러리한 비주얼의 디저트가 꾸준히 인기를 끌고 있습니다. 최근에는 '고급화된 홈카페' 트렌드와 함께 디저트 문화가 더욱 발전하고 있으며, 독창적인 플레이팅과 프리미엄 재료를 사용하는 카페가 늘어나고 있습니다. 앞으로 디저트 시장이 더욱 세분화될 전망입니다.",
   },
+  {
+    id: 6,
+    title: "메타버스가 가져올 일상의 변화",
+    content:
+      "가상 현실과 증강 현실 기술이 발전하면서 메타버스가 우리 생활의 중요한 부분이 되고 있습니다...",
+    fullContent:
+      "가상 현실과 증강 현실 기술이 발전하면서 메타버스가 우리 생활의 중요한 부분이 되고 있습니다. 특히, 가상 오피스, 가상 쇼핑, 가상 콘서트와 같은 서비스가 증가하면서 메타버스의 경제적 가치가 커지고 있습니다. 앞으로 더 많은 기업들이 메타버스 기술을 활용할 것으로 예상됩니다.",
+  },
+  {
+    id: 7,
+    title: "전기차 충전 인프라 확장",
+    content:
+      "전기차 보급이 증가함에 따라 충전 인프라 확대가 중요한 과제로 떠오르고 있습니다...",
+    fullContent:
+      "전기차 보급이 증가함에 따라 충전 인프라 확대가 중요한 과제로 떠오르고 있습니다. 정부와 민간 기업들이 협력하여 전국적으로 초고속 충전소를 구축하고 있으며, 가정용 충전 시스템도 점점 보급되고 있습니다. 향후 친환경 모빌리티 산업의 성장이 더욱 가속화될 것으로 보입니다.",
+  },
+  {
+    id: 8,
+    title: "핀테크가 바꾸는 금융의 미래",
+    content:
+      "비대면 금융 서비스가 급속도로 발전하면서 핀테크 산업이 전통 금융 시장을 변화시키고 있습니다...",
+    fullContent:
+      "비대면 금융 서비스가 급속도로 발전하면서 핀테크 산업이 전통 금융 시장을 변화시키고 있습니다. 모바일 뱅킹, 디지털 자산 관리, 블록체인 기반 결제 시스템 등 새로운 금융 서비스가 등장하고 있으며, 향후 금융업계는 AI와 빅데이터를 활용한 맞춤형 금융 서비스로 진화할 전망입니다.",
+  },
+  {
+    id: 9,
+    title: "스마트 홈 기술의 현재와 미래",
+    content:
+      "스마트 홈 기기가 점점 보편화되면서 우리의 생활 방식이 변화하고 있습니다...",
+    fullContent:
+      "스마트 홈 기기가 점점 보편화되면서 우리의 생활 방식이 변화하고 있습니다. IoT 기술을 활용한 스마트 냉장고, AI 음성 비서, 자동화된 보안 시스템 등이 일상 속에서 점점 더 중요한 역할을 하고 있습니다. 앞으로 스마트 홈은 더욱 편리하고 효율적인 방향으로 발전할 것입니다.",
+  },
+  {
+    id: 10,
+    title: "헬스케어 산업의 혁신",
+    content:
+      "AI와 빅데이터가 접목된 헬스케어 기술이 의료 산업의 혁신을 주도하고 있습니다...",
+    fullContent:
+      "AI와 빅데이터가 접목된 헬스케어 기술이 의료 산업의 혁신을 주도하고 있습니다. 원격 진료, AI 진단 시스템, 스마트 웨어러블 기기 등의 발전으로 의료 접근성이 향상되고 있으며, 개인 맞춤형 건강 관리가 가능해지고 있습니다. 헬스케어 산업은 앞으로도 지속적인 성장이 기대됩니다.",
+  },
 ];
+
 
 const Recommendation = () => {
   const [expandedArticle, setExpandedArticle] = useState(null);
+  const [visibleArticles, setVisibleArticles] = useState(5); // 처음엔 5개만 표시
+  const loadMoreRef = useRef(null); // 더보기 클릭 시 이동할 위치 참조
 
   const handleCardClick = (id) => {
-    setExpandedArticle(expandedArticle === id ? null : id); // 클릭된 기사만 확장, 다시 클릭 시 닫기
+    setExpandedArticle(expandedArticle === id ? null : id);
+  };
+
+  const handleLoadMore = () => {
+    setVisibleArticles(articles.length); // 모든 기사 표시
+
+    // 더보기 클릭 시 부드럽게 아래로 스크롤 이동
+    setTimeout(() => {
+      loadMoreRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 200);
   };
 
   return (
@@ -57,7 +109,7 @@ const Recommendation = () => {
         width: "80%",
         maxWidth: "800px",
         position: "absolute",
-        top: "65%", // 기존보다 더 내려서 제목과 키워드가 잘 보이도록 조정
+        top: "65%", // 기존보다 내려서 제목과 키워드가 잘 보이도록 조정
         left: "50%",
         transform: "translate(-50%, -50%)",
         textAlign: "center",
@@ -71,8 +123,8 @@ const Recommendation = () => {
         키워드1, 키워드2
       </Typography>
 
-      {/* 기사 리스트 */}
-      {articles.map((article) => (
+      {/* 기사 리스트 (처음엔 5개만 표시, 더보기 클릭 시 모든 기사 표시) */}
+      {articles.slice(0, visibleArticles).map((article) => (
         <Card
           key={article.id}
           onClick={() => handleCardClick(article.id)}
@@ -82,7 +134,7 @@ const Recommendation = () => {
             boxShadow: 2,
             textAlign: "left",
             cursor: "pointer",
-            transition: "all 0.3s ease-in-out",
+            transition: "max-height 0.5s ease-in-out",
             maxHeight: expandedArticle === article.id ? "500px" : "100px",
             overflow: "hidden",
           }}
@@ -98,10 +150,14 @@ const Recommendation = () => {
         </Card>
       ))}
 
-      {/* 더보기 버튼 */}
-      <Box display="flex" justifyContent="center" mt={5}>
-        <Button variant="contained">더보기</Button>
-      </Box>
+      {/* 더보기 버튼 (5개씩 로드, 모든 기사가 로드되면 숨김) */}
+      {visibleArticles < articles.length && (
+        <Box display="flex" justifyContent="center" mt={5} ref={loadMoreRef}>
+          <Button variant="contained" onClick={handleLoadMore}>
+            더보기
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
