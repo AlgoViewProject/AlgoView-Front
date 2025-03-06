@@ -62,7 +62,7 @@ const Navbar = () => {
         <li>
           <button
             style={{
-              background: "#eee",
+              background: "#5C9ECF",
               border: "none",
               padding: "10px 8px",
               margin: "0px 20px",
@@ -70,15 +70,15 @@ const Navbar = () => {
               fontSize: "18px",
               cursor: "pointer",
               transition: "background 0.3s ease",
-              color: "#777",
+              color: "white",
             }}
             onMouseEnter={(e) => {
               e.target.style.background = "#ddd";
               e.target.style.color = "black";
             }}
             onMouseLeave={(e) => {
-              e.target.style.background = "#eee";
-              e.target.style.color = "#777";
+              e.target.style.background = "#5C9ECF";
+              e.target.style.color = "#white";
             }}
           >
             로그인
