@@ -10,7 +10,7 @@ import {
   Box,
 } from "@mui/material";
 
-const NewsList = () => {
+const News = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -123,4 +123,4 @@ const NewsList = () => {
   );
 };
 
-export default NewsList;
+export default News;

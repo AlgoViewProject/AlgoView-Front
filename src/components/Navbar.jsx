@@ -40,7 +40,7 @@ const Navbar = () => {
         {[
           { path: "/interest-analysis", label: "YOUTUBE 기록 분석" },
           { path: "/bias-analysis", label: "편향도 분석" },
-          { path: "/recommendation", label: "관련 기사 추천" },
+          { path: "/news", label: "관련 기사 추천" },
           { path: "/review", label: "후기" },
         ].map((item, index) => (
           <li key={index} style={{ margin: "0 15px" }}>
