@@ -1,7 +1,14 @@
 // import React from "react";
-import { Box, Typography, Card } from "@mui/material";
+import { Box, Typography, Card, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const InterestAnalysisResult = () => {
+  const navigate = useNavigate();
+
+  const handleNewsRedirect = () => {
+    navigate("/news");
+  };
+
   return (
     <Box sx={{ width: "80%", margin: "auto", textAlign: "center", mt: 5 }}>
       {/* 제목 */}
@@ -19,7 +26,7 @@ const InterestAnalysisResult = () => {
         </Typography>
         <Card sx={{ mt: 2, p: 2, display: "flex", justifyContent: "center" }}>
           <img
-            src="/mnt/data/image1.png" // 키워드 클라우드 이미지 경로 설정
+            src="/mnt/data/image1.png"
             alt="키워드 클라우드"
             style={{ width: "100%", maxWidth: "600px" }}
           />
@@ -33,7 +40,7 @@ const InterestAnalysisResult = () => {
         </Typography>
         <Card sx={{ mt: 2, p: 2, display: "flex", justifyContent: "center" }}>
           <img
-            src="/mnt/data/image2.png" // 시청 시간별 그래프 이미지 경로 설정
+            src="/mnt/data/image2.png"
             alt="시청 시간별 그래프"
             style={{ width: "100%", maxWidth: "600px" }}
           />
@@ -51,6 +58,13 @@ const InterestAnalysisResult = () => {
             ~~~~나 ~~~~~
           </Typography>
         </Card>
+      </Box>
+
+      {/* 관련 기사 추천하기 버튼 */}
+      <Box sx={{ mt: 4, textAlign: "center" }}>
+        <Button variant="contained" color="primary" onClick={handleNewsRedirect}>
+          관련 기사 추천
+        </Button>
       </Box>
     </Box>
   );

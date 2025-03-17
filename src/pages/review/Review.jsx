@@ -17,11 +17,8 @@ const Review = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  // ✅ 현재 로그인된 사용자 ID (임시, 실제 로그인된 사용자 정보로 대체 필요)
-  const userId = 1;
+  const [name, setName] = useState("");
+  const [contents, setContents] = useState("");
 
   // ✅ 백엔드에서 리뷰 데이터 가져오기
   useEffect(() => {
@@ -40,23 +37,27 @@ const Review = () => {
 
   // ✅ 리뷰 작성 핸들러
   const handleSubmit = () => {
-    if (!title.trim() || !content.trim()) {
-      alert("제목과 내용을 입력해주세요.");
+    if (!name.trim() || !contents.trim()) {
+      alert("이름과 내용을 입력해주세요.");
       return;
     }
 
-    const newReview = {
-      title,
-      content,
-      user: { id: userId }, // ✅ user 객체에 id만 포함
-    };
+    const formData = new URLSearchParams();
+    formData.append("name", `"${name}"`); // x-www-form-urlencoded에 맞춰 따옴표 포함
+    formData.append("contents", `"${contents}"`);
 
     axios
-      .post("http://localhost:8080/reviews", newReview)
-      .then((response) => {
-        setReviews([response.data, ...reviews]); // 새 리뷰 추가
-        setTitle(""); // 입력 필드 초기화
-        setContent("");
+      .post("http://localhost:8080/reviews", formData, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+      .then(() => {
+        const newReview = {
+          name: `"${name}"`, // DB와 일치하도록 처리
+          contents: `"${contents}"`,
+        };
+        setReviews([newReview, ...reviews]); // 새 리뷰 추가
+        setName(""); // 입력 필드 초기화
+        setContents("");
       })
       .catch((error) => {
         console.error("Error posting review:", error);
@@ -85,11 +86,11 @@ const Review = () => {
       {/* ✅ 리뷰 입력 폼 */}
       <TextField
         fullWidth
-        label="제목"
+        label="이름"
         variant="outlined"
         margin="normal"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
       <TextField
         fullWidth
@@ -98,8 +99,8 @@ const Review = () => {
         multiline
         rows={4}
         margin="normal"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        value={contents}
+        onChange={(e) => setContents(e.target.value)}
       />
       <Button
         variant="contained"
@@ -122,18 +123,17 @@ const Review = () => {
                 <Grid container spacing={2} alignItems="center">
                   <Grid item>
                     <Avatar sx={{ bgcolor: "grey.500" }}>
-                      {review.user?.id ? `U${review.user.id}` : "?"}
+                      {review.name.charAt(1)} {/* 따옴표 제거 */}
                     </Avatar>
                   </Grid>
                   <Grid item xs>
-                    <Typography variant="h6">{review.title}</Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      사용자 ID: {review.user?.id || "알 수 없음"}
+                    <Typography variant="h6">
+                      {review.name.replace(/"/g, "")} {/* 따옴표 제거 */}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Typography variant="body2" sx={{ mt: 2 }}>
-                  {review.content}
+                  {review.contents.replace(/"/g, "")} {/* 따옴표 제거 */}
                 </Typography>
               </CardContent>
             </Card>
