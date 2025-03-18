@@ -3,7 +3,6 @@ import { Typography, Box, Button, Alert } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import AnalysisMenu from "../../components/AnalysisMenu";
 import FileUpload from "../../components/FileUpload";
 import AttachButton from "../../components/AttatchButton";
 
@@ -27,38 +26,34 @@ const InterestAnalysis = () => {
     const [jsonFile, setJsonFile] = useState(null);
     const [csvFile, setCsvFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [jsonUploadOpen, setJsonUploadOpen] = useState(false);
-    const [csvUploadOpen, setCsvUploadOpen] = useState(false);
+    const [uploadOpen, setUploadOpen] = useState(false);
     const navigate = useNavigate();
 
-    // JSON 파일 업로드 처리
-    const handleJsonUpload = (file) => {
-        console.log("JSON 파일 선택됨:", file);
-        if (file) {
-            const fileType = file.name.split(".").pop().toLowerCase();
-            if (fileType === "json") {
-                setJsonFile(file);
-                setErrorMessage(""); // 오류 메시지 초기화
-                setJsonUploadOpen(false); // 파일 업로드 창 닫기
-            } else {
-                setErrorMessage("JSON 파일만 업로드할 수 있습니다.");
-            }
+    // 파일 업로드 처리
+    const handleFileUpload = (files) => {
+        if (files.length !== 2) {
+            setErrorMessage("JSON과 CSV 파일을 모두 선택해야 합니다.");
+            return;
         }
-    };
 
-    // CSV 파일 업로드 처리
-    const handleCsvUpload = (file) => {
-        console.log("CSV 파일 선택됨:", file);
-        if (file) {
+        let json = null;
+        let csv = null;
+
+        files.forEach((file) => {
             const fileType = file.name.split(".").pop().toLowerCase();
-            if (fileType === "csv") {
-                setCsvFile(file);
-                setErrorMessage(""); // 오류 메시지 초기화
-                setCsvUploadOpen(false); // 파일 업로드 창 닫기
-            } else {
-                setErrorMessage("CSV 파일만 업로드할 수 있습니다.");
-            }
+            if (fileType === "json") json = file;
+            if (fileType === "csv") csv = file;
+        });
+
+        if (!json || !csv) {
+            setErrorMessage("JSON과 CSV 파일을 각각 하나씩 선택해야 합니다.");
+            return;
         }
+
+        setJsonFile(json);
+        setCsvFile(csv);
+        setErrorMessage(""); // 오류 메시지 초기화
+        setUploadOpen(false); // 업로드 창 닫기
     };
 
     // 업로드된 파일을 서버로 전송
@@ -72,19 +67,14 @@ const InterestAnalysis = () => {
         formData.append("historyFile", jsonFile);
         formData.append("subscriptionsFile", csvFile);
 
-        console.log("서버로 전송할 JSON 파일:", jsonFile.name);
-        console.log("서버로 전송할 CSV 파일:", csvFile.name);
-
         try {
             const response = await axios.post("http://localhost:8080/api/upload", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            console.log("업로드 성공:", response.data);
             navigate("/interest-analysis/loading");
         } catch (error) {
-            console.error("업로드 실패:", error);
             setErrorMessage("파일 업로드 중 오류가 발생했습니다.");
         }
     };
@@ -95,13 +85,6 @@ const InterestAnalysis = () => {
             <Box flex={1} textAlign="left">
                 <Typography variant="h4" fontWeight="bold" gutterBottom mt={5}>
                     1. Youtube 데이터 조회
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary" sx={{ p: 2, mt: 2 }} gutterBottom>
-                    자신의 Youtube 기록을 불러오세요.
-                </Typography>
-
-                <Typography variant="body1" color="textSecondary" sx={{ p: 2 }} gutterBottom>
-                    시청 기록
                 </Typography>
 
                 {/* 이미지 & 설명 리스트 렌더링 */}
@@ -117,48 +100,24 @@ const InterestAnalysis = () => {
                 {/* 오류 메시지 표시 */}
                 {errorMessage && <Alert severity="error" sx={{ mt: 2 }}>{errorMessage}</Alert>}
 
-                {/* JSON 파일 업로드 버튼 */}
+                {/* 파일 업로드 버튼 */}
                 <Box textAlign="center" mt={3}>
-                    <AttachButton onClick={() => setJsonUploadOpen(true)} label="JSON 파일 업로드" />
+                    <AttachButton onClick={() => setUploadOpen(true)} label="파일 업로드" />
+                    {jsonFile && csvFile && (
+                        <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                            업로드된 파일: {jsonFile.name}, {csvFile.name}
+                        </Typography>
+                    )}
                 </Box>
-                {jsonUploadOpen && <FileUpload onClose={() => setJsonUploadOpen(false)} onUpload={handleJsonUpload} />}
-
-                {/* CSV 파일 업로드 버튼 */}
-                <Box textAlign="center" mt={3}>
-                    <AttachButton onClick={() => setCsvUploadOpen(true)} label="CSV 파일 업로드" />
-                </Box>
-                {csvUploadOpen && <FileUpload onClose={() => setCsvUploadOpen(false)} onUpload={handleCsvUpload} />}
+                {uploadOpen && <FileUpload onClose={() => setUploadOpen(false)} onUpload={handleFileUpload} />}
 
                 {/* "다음" 버튼 */}
                 <Box textAlign="center" mt={3}>
-                    <Button
-                        variant="contained"
-                        onClick={handleSubmit}
-                        disabled={!jsonFile || !csvFile} // JSON과 CSV 파일이 모두 업로드되어야 활성화
-                        sx={{
-                            borderRadius: "20px",
-                            backgroundColor: jsonFile && csvFile ? "#5C9ECF" : "#B0C4DE",
-                            color: "white",
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            padding: "10px 20px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            "&:hover": {
-                                backgroundColor: jsonFile && csvFile ? "#4A89C7" : "#B0C4DE",
-                            },
-                        }}
-                    >
+                    <Button variant="contained" onClick={handleSubmit} disabled={!jsonFile || !csvFile}>
                         다음
                         <NavigateNext fontSize="small" />
                     </Button>
                 </Box>
-            </Box>
-
-            {/* Fixed Right Menu */}
-            <Box sx={{ position: "fixed", right: 20, top: 100 }}>
-                <AnalysisMenu />
             </Box>
         </Box>
     );

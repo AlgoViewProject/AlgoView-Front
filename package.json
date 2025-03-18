@@ -14,10 +14,15 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
+    "@nivo/bar": "^0.88.0",
+    "@nivo/core": "^0.88.0",
+    "@nivo/line": "^0.88.0",
+    "@nivo/radar": "^0.88.0",
     "@react-oauth/google": "^0.12.1",
     "axios": "^1.8.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-router-dom": "^7.2.0"
   },
   "devDependencies": {

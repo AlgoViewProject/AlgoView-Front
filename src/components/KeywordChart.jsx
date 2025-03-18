@@ -1,6 +1,6 @@
 import { ResponsiveRadar } from '@nivo/radar';
 
-const KeywordRadarChart = () => {
+const KeywordChart = () => {
     const data = [
         { keyword: "Music", frequency: 150 },
         { keyword: "Gaming", frequency: 100 },
@@ -31,4 +31,4 @@ const KeywordRadarChart = () => {
     );
 };
 
-export default KeywordRadarChart;
+export default KeywordChart;
