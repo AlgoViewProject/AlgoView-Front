@@ -22,7 +22,7 @@ function App() {
         <Route path="/bias-analysis" element={< BiasAnalysis/>} />
         <Route path="/news" element={<News />} />
         <Route path="/review" element={<Review />} />
-        <Route path="/test" element={<Test />} />
+        <Route path="/interest-analysis/test" element={<Test />} />
 
       </Routes>
     </>

@@ -25,8 +25,16 @@ const InterestAnalysisLoading = () => {
       });
     }, 3000);
 
-    return () => clearInterval(interval);
-  }, []);
+    // 8초 후에 자동 이동
+    const timeout = setTimeout(() => {
+      navigate("/interest-analysis/result");
+    }, 8000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [navigate]);
 
   return (
     <Box
@@ -66,4 +74,5 @@ const InterestAnalysisLoading = () => {
 };
 
 export default InterestAnalysisLoading;
+
 
